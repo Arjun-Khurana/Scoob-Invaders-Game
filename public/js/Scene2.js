@@ -5,7 +5,7 @@ class Scene2 extends Phaser.Scene {
         this.myScore = 0;
         this.theirScore = 0;
         this.particleConfig = {
-            angle: { min: 170, max: 190 },
+            angle: { min: 160, max: 200 },
             scale: { start: 0.4, end: 0.1 },
             blendMode: 'ADD',
             lifespan: 250,
@@ -13,15 +13,16 @@ class Scene2 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('star', '../assets/star.png')
-        this.load.image('scooby', '../assets/scooby.jpg')
-        this.load.image('shaggy', '../assets/shaggy.jpg')
-        this.load.image('bomb', '../assets/bomb.png')
-        this.load.image("flares", '../assets/yellow.png')
         this.load.audio('theme', [
             'assets/themeSong.oog',
             'assets/themeSong.mp3'
         ]);
+        this.load.image('scooby', '../assets/scoobs.png')
+        this.load.image('shaggy', '../assets/shags.png')
+        this.load.image('bomb', '../assets/snack.png')
+        this.load.image('bg', '../assets/ScoobyDoobieBackground.png')
+        this.load.image("blueFlares", '../assets/blue.png')
+        this.load.image("greenFlares", '../assets/scoob_particle.png')
     }
 
     onCollision(x, star) {
@@ -39,13 +40,21 @@ class Scene2 extends Phaser.Scene {
         var music = this.sound.add('theme', {loop:true}); 
         //music.loop = true; 
         music.play(); 
+
+        this.add.image(0, 0, "bg").setOrigin(0, 0).setScale(1);
         this.side = data.selectedSide;
         if (this.side === "leftSide") {
             this.player = this.physics.add.sprite(400,300, 'shaggy');
-            this.player.setScale(0.1)
+            this.particles = this.add.particles("greenFlares");
+            this.opponentParticles = this.add.particles("blueFlares");
+            this.player.setScale(0.05)
+            this.flip = 1;
         } else {
             this.player = this.physics.add.sprite(400,300, 'scooby');
-            this.player.setScale(0.25)
+            this.particles = this.add.particles("blueFlares");
+            this.opponentParticles = this.add.particles("greenFlares");
+            this.player.setScale(0.05)
+            this.flip = -1;
         }
         this.player.setMaxVelocity(1000).setFriction(800, 800);
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -56,23 +65,13 @@ class Scene2 extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.bullets, this.onCollision, null, this)
         this.player.body.setCollideWorldBounds(true);
 
-        this.particles = this.add.particles("flares");
-
-        if (this.side == "leftSide") {
-            this.flip = 1;
-        } else if (this.side == "rightSide") {
-            this.flip = -1;
-        } else {
-            console.error("Selected Side not read from Scene1");
-        }
-        
         this.socket.on(this.side, (packet) => {
             if (packet.type == "projectile") {
                 let bullet = this.bullets.get();
                 bullet.setActive(true);
                 bullet.setVisible(true);
 
-                let particleEmitter = this.attachParticles(bullet);
+                let particleEmitter = this.attachParticles(bullet, this.opponentParticles);
 
                 if (bullet) {
                     bullet.fire({
@@ -92,10 +91,13 @@ class Scene2 extends Phaser.Scene {
                 return;
             }
             else if (packet.type === "hitPlayer") {
-                if (packet.increment === this.side) {
-                    this.myScore++;
+                console.log(packet)
+                if (this.side == "leftSide") {
+                    this.myScore = packet.scores.leftScore;
+                    this.theirScore = packet.scores.rightScore;
                 } else {
-                    this.theirScore++;
+                    this.myScore = packet.scores.rightScore;
+                    this.theirScore = packet.scores.leftScore;
                 }
             }
         });
@@ -103,8 +105,8 @@ class Scene2 extends Phaser.Scene {
         this.scoreDisplay = this.add.text(10, 20, '');
     }
 
-    attachParticles(bullet) {
-        let particleEmitter = this.particles.createEmitter(this.particleConfig);
+    attachParticles(bullet, particles) {
+        let particleEmitter = particles.createEmitter(this.particleConfig);
         particleEmitter.startFollow(bullet);
 
         bullet.addListener("hitBorder", (data) => {
@@ -120,6 +122,7 @@ class Scene2 extends Phaser.Scene {
     update(time,delta) {
         this.scoreDisplay.setText(`Your score: ${this.myScore}, opponent score: ${this.theirScore}`)
         this.time = time;
+        
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-400);
         } else if (this.cursors.right.isDown) {
@@ -141,7 +144,7 @@ class Scene2 extends Phaser.Scene {
             bullet.setActive(true);
             bullet.setVisible(true);
 
-            let particleEmitter = this.attachParticles(bullet);
+            let particleEmitter = this.attachParticles(bullet, this.particles);
 
             if (bullet) {
                 bullet.fire({
