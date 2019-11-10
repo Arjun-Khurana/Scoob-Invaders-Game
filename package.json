@@ -1,0 +1,25 @@
+{
+  "name": "Scoob-Invaders-Game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "phaser": "^3.20.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arjun-Khurana/Scoob-Invaders-Game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Arjun-Khurana/Scoob-Invaders-Game/issues"
+  },
+  "homepage": "https://github.com/Arjun-Khurana/Scoob-Invaders-Game#readme"
+}
