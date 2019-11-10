@@ -91,7 +91,10 @@ class Scene2 extends Phaser.Scene {
         particleEmitter.startFollow(bullet);
 
         bullet.addListener("hitBorder", (data) => {
-            this.socket.emit(this.side, data);
+            if (bullet.active) {
+                this.socket.emit(this.side, data);
+            }
+            bullet.disableBody(true, true);
         });
 
         return particleEmitter;
@@ -117,8 +120,6 @@ class Scene2 extends Phaser.Scene {
         }
 
         if (this.cursors.space.isDown && this.time > this.lastFired) {
-            //console.log("Hello from fire");
-            //console.log(this.bullets);
             let bullet = this.bullets.get();
             bullet.setActive(true);
             bullet.setVisible(true);

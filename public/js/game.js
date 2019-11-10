@@ -10,7 +10,6 @@ let config = {
         y: 0,
         width: 800,
         height: 600,
-        thickness: 32
       }
     }
   },
