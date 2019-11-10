@@ -5,7 +5,7 @@ class Scene2 extends Phaser.Scene {
         this.myScore = 0;
         this.theirScore = 0;
         this.particleConfig = {
-            angle: { min: 170, max: 190 },
+            angle: { min: 160, max: 200 },
             scale: { start: 0.4, end: 0.1 },
             blendMode: 'ADD',
             lifespan: 250,
@@ -13,11 +13,12 @@ class Scene2 extends Phaser.Scene {
     }
 
     preload() {
-        //this.load.image('star', '../assets/snack.png')
         this.load.image('scooby', '../assets/scoobs.png')
         this.load.image('shaggy', '../assets/shags.png')
         this.load.image('bomb', '../assets/snack.png')
-        this.load.image("flares", '../assets/yellow.png')
+        this.load.image('bg', '../assets/ScoobyDoobieBackground.png')
+        this.load.image("blueFlares", '../assets/blue.png')
+        this.load.image("greenFlares", '../assets/scoob_particle.png')
     }
 
     onCollision(x, star) {
@@ -32,12 +33,16 @@ class Scene2 extends Phaser.Scene {
     }
 
     create(data) {
+        this.add.image(0, 0, "bg").setOrigin(0, 0).setScale(1);
+
         this.side = data.selectedSide;
         if (this.side === "leftSide") {
             this.player = this.physics.add.sprite(400,300, 'shaggy');
+            this.particles = this.add.particles("greenFlares");
             this.player.setScale(0.05)
         } else {
             this.player = this.physics.add.sprite(400,300, 'scooby');
+            this.particles = this.add.particles("blueFlares");
             this.player.setScale(0.05)
         }
         this.player.setMaxVelocity(1000).setFriction(800, 800);
@@ -48,8 +53,6 @@ class Scene2 extends Phaser.Scene {
         this.socket = data.socket;
         this.physics.add.overlap(this.player, this.bullets, this.onCollision, null, this)
         this.player.body.setCollideWorldBounds(true);
-
-        this.particles = this.add.particles("flares");
 
         if (this.side == "leftSide") {
             this.flip = 1;
