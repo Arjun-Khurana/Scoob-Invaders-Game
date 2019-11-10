@@ -32,7 +32,7 @@ class Scene2 extends Phaser.Scene {
         } else if (this.cursors.right.isDown) {
             this.player.setAccelerationX(800);
         } else {
-            this.player.setAccelerationX(0);
+            this.player.setVelocityX(0);
         }
 
         if (this.cursors.down.isDown) {
@@ -40,7 +40,7 @@ class Scene2 extends Phaser.Scene {
         } else if (this.cursors.up.isDown) {
             this.player.setAccelerationY(-800);
         } else {
-            this.player.setAccelerationY(0);
+            this.player.setVelocityY(0);
         }
 
         if (this.cursors.space.isDown && time > this.lastFired) {
