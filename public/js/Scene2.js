@@ -156,7 +156,7 @@ class Scene2 extends Phaser.Scene {
                     socket: this.socket,
                     emitter: particleEmitter
                 });
-                this.lastFired = 300 + this.time;
+                this.lastFired = 50 + this.time;
             }
         }
     }
