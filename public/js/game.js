@@ -8,7 +8,7 @@ let config = {
       setBounds: {
         x: 0,
         y: 0,
-        width: 800,
+        width: window.innerWidth,
         height: 600,
       }
     }
