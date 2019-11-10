@@ -13,10 +13,10 @@ class Scene2 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('star', '../assets/star.png')
-        this.load.image('scooby', '../assets/scooby.jpg')
-        this.load.image('shaggy', '../assets/shaggy.jpg')
-        this.load.image('bomb', '../assets/bomb.png')
+        //this.load.image('star', '../assets/snack.png')
+        this.load.image('scooby', '../assets/scoobs.png')
+        this.load.image('shaggy', '../assets/shags.png')
+        this.load.image('bomb', '../assets/snack.png')
         this.load.image("flares", '../assets/yellow.png')
     }
 
