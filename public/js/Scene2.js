@@ -18,6 +18,10 @@ class Scene2 extends Phaser.Scene {
         this.load.image('shaggy', '../assets/shaggy.jpg')
         this.load.image('bomb', '../assets/bomb.png')
         this.load.image("flares", '../assets/yellow.png')
+        this.load.audio('theme', [
+            'assets/themeSong.oog',
+            'assets/themeSong.mp3'
+        ]);
     }
 
     onCollision(x, star) {
@@ -32,6 +36,9 @@ class Scene2 extends Phaser.Scene {
     }
 
     create(data) {
+        var music = this.sound.add('theme', {loop:true}); 
+        //music.loop = true; 
+        music.play(); 
         this.side = data.selectedSide;
         if (this.side === "leftSide") {
             this.player = this.physics.add.sprite(400,300, 'shaggy');
