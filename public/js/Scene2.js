@@ -14,7 +14,17 @@ class Scene2 extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.bullets = this.add.group({ classType: Bullet, runChildUpdate: true });
         this.lastFired = 0;
-        this.flip = -1;
+        this.side = data.selectedSide;
+        if (side == "leftSide") {
+            this.flip = 1;
+        }
+        else if (side == "rightSide") {
+            this.flip = -1;
+        }
+        else {
+            console.error("Selected Side not read from Scene1");
+        }
+        
     }
       
     update(time,delta) {
