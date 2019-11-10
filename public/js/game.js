@@ -18,8 +18,8 @@ let config = {
 
 let socket;
 
-socket = io(`http://localhost:8080`);
-// socket = io(`https://scoob-invaders-api.herokuapp.com`);
+// socket = io(`http://localhost:8080`);
+socket = io(`https://scoob-invaders-api.herokuapp.com`);
 
 let game = new Phaser.Game(config);
 game.scene.start("sideSelector", {
