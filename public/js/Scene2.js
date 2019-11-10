@@ -24,12 +24,6 @@ class Scene2 extends Phaser.Scene {
         } else {
             console.error("Selected Side not read from Scene1");
         }
-
-        this.bullets.getChildren().forEach((bullet) => {
-            bullet.on("hitBorder", (data) => {
-                this.socket.emit(this.side, data);
-            })
-        })
         
         this.socket.on(this.side, (packet) => {
             if (packet.type == "projectile") {
@@ -38,17 +32,25 @@ class Scene2 extends Phaser.Scene {
                 bullet.setVisible(true);
 
                 if (bullet) {
-                    bullet.fire(this.player, {
+                    bullet.fire({
+                        x: this.side == "leftSide" ? 800 : 0,
+                        y: packet.y,
+                        vel: {
+                            x: 0
+                        }
+                    }, {
                         v: -this.flip,
+                        selectedSide: this.selectedSide,
                         socket: this.socket
                     });
-                    this.lastFired = 500 + time;
+                    this.lastFired = 500 + this.time;
                 }
             }
         })
     }
       
     update(time,delta) {
+        this.time = time;
         if (this.cursors.left.isDown) {
             this.player.setAccelerationX(-800);
         } else if (this.cursors.right.isDown) {
@@ -65,19 +67,24 @@ class Scene2 extends Phaser.Scene {
             this.player.setAccelerationY(0);
         }
 
-        if (this.cursors.space.isDown && time > this.lastFired) {
+        if (this.cursors.space.isDown && this.time > this.lastFired) {
             //console.log("Hello from fire");
             //console.log(this.bullets);
             let bullet = this.bullets.get();
             bullet.setActive(true);
             bullet.setVisible(true);
 
+            bullet.addListener("hitBorder", (data) => {
+                this.socket.emit(this.side, data);
+            });
+
             if (bullet) {
                 bullet.fire(this.player, {
                     v: this.flip,
+                    selectedSide: this.side,
                     socket: this.socket
                 });
-                this.lastFired = 500 + time;
+                this.lastFired = 500 + this.time;
             }
         }
     }
