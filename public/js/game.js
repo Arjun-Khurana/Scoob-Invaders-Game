@@ -1,6 +1,6 @@
 let config = {
-    width: 800,
-    height: 600, 
+    width: window.innerWidth,
+    height: window.innerHeight, 
     backgroundColor: 0x000000,
     physics: {
         default: 'impact',
