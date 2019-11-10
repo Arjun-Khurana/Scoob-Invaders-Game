@@ -84,10 +84,13 @@ class Scene2 extends Phaser.Scene {
                 return;
             }
             else if (packet.type === "hitPlayer") {
-                if (packet.increment === this.side) {
-                    this.myScore++;
+                console.log(packet)
+                if (this.side == "leftSide") {
+                    this.myScore = packet.scores.leftScore;
+                    this.theirScore = packet.scores.rightScore;
                 } else {
-                    this.theirScore++;
+                    this.myScore = packet.scores.rightScore;
+                    this.theirScore = packet.scores.leftScore;
                 }
             }
         });
@@ -112,6 +115,7 @@ class Scene2 extends Phaser.Scene {
     update(time,delta) {
         this.scoreDisplay.setText(`Your score: ${this.myScore}, opponent score: ${this.theirScore}`)
         this.time = time;
+        
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-400);
         } else if (this.cursors.right.isDown) {
