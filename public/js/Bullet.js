@@ -1,4 +1,4 @@
-class Bullet extends Phaser.GameObjects.Image {
+class Bullet extends Phaser.Physics.Arcade.Image {
     constructor(scene, x, y) {
         super(scene, x, y, 'bomb')
         this.speed = 0;
@@ -8,8 +8,9 @@ class Bullet extends Phaser.GameObjects.Image {
     fire(player, data) {
         this.selectedSide = data.selectedSide;
         this.setPosition(player.x, player.y);
-        this.speed = Phaser.Math.GetSpeed(data.v * 1000 + player.vel.x, 1)
+        this.speed = Phaser.Math.GetSpeed(data.v * 1000, 1)
         this.born = 0;
+        this.enableBody();
     }
 
     update(time, delta) {

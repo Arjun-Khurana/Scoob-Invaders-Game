@@ -1,6 +1,9 @@
 class Scene2 extends Phaser.Scene {
     constructor() {
         super("playGame");
+        this.socket = null;
+        this.myScore = 0;
+        this.theirScore = 0;
     }
 
     preload() {
@@ -8,23 +11,26 @@ class Scene2 extends Phaser.Scene {
         this.load.image('bomb', '../assets/bomb.png')
     }
 
-    onCollision() {
+    onCollision(x, star) {
         console.log("hit player");
-        this.socket.emit(this.side, {
-            type: "hitPlayer"
-        })
+        if (this.socket) {
+            this.socket.emit(this.side, {
+                type: "hitPlayer"
+            })
+        }
+        star.disableBody(true, true);
     }
 
     create(data) {
-        this.player = this.impact.add.sprite(400,300, 'star');
-        this.player.setMaxVelocity(1000).setFriction(800, 600).setPassiveCollision();
+        this.player = this.physics.add.sprite(400,300, 'star');
+        this.player.setMaxVelocity(1000).setFriction(800, 800);
         this.cursors = this.input.keyboard.createCursorKeys();
-        this.bullets = this.add.group({ classType: Bullet, runChildUpdate: true });
+        this.bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
         this.lastFired = 0;
         this.side = data.selectedSide;
         this.socket = data.socket;
-        this.game.physics.impact.collide(this.player, this.bullets, this.onCollision);
-
+        this.physics.add.overlap(this.player, this.bullets, this.onCollision, null, this)
+        
         if (this.side == "leftSide") {
             this.flip = 1;
         } else if (this.side == "rightSide") {
@@ -51,13 +57,24 @@ class Scene2 extends Phaser.Scene {
                         selectedSide: this.selectedSide,
                         socket: this.socket
                     });
-                    this.lastFired = 500 + this.time;
+                }
+
+                return;
+            }
+            else if (packet.type === "hitPlayer") {
+                if (packet.increment === this.side) {
+                    this.myScore++;
+                } else {
+                    this.theirScore++;
                 }
             }
-        })
+        });
+
+        this.scoreDisplay = this.add.text(10, 20, '');
     }
       
     update(time,delta) {
+        this.scoreDisplay.setText(`Your score: ${this.myScore}, opponent score: ${this.theirScore}`)
         this.time = time;
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-400);
@@ -87,7 +104,10 @@ class Scene2 extends Phaser.Scene {
             });
 
             if (bullet) {
-                bullet.fire(this.player, {
+                bullet.fire({
+                    x: this.player.x + 20*this.flip,
+                    y: this.player.y
+                }, {
                     v: this.flip,
                     selectedSide: this.side,
                     socket: this.socket

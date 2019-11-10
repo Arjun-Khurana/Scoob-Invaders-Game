@@ -3,8 +3,8 @@ let config = {
   height: window.innerHeight,
   backgroundColor: 0x000000,
   physics: {
-    default: 'impact',
-    impact: {
+    default: 'arcade',
+    arcade: {
       setBounds: {
         x: 0,
         y: 0,
@@ -19,8 +19,8 @@ let config = {
 
 let socket;
 
-// socket = io(`http://localhost:8080`);
-socket = io(`https://scoob-invaders-api.herokuapp.com`);
+socket = io(`http://localhost:8080`);
+// socket = io(`https://scoob-invaders-api.herokuapp.com`);
 
 let game = new Phaser.Game(config);
 game.scene.start("sideSelector", {
