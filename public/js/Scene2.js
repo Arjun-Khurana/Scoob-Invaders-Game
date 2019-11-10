@@ -39,11 +39,13 @@ class Scene2 extends Phaser.Scene {
         if (this.side === "leftSide") {
             this.player = this.physics.add.sprite(400,300, 'shaggy');
             this.particles = this.add.particles("greenFlares");
+            this.opponentParticles = this.add.particles("blueFlares");
             this.player.setScale(0.05)
             this.flip = 1;
         } else {
             this.player = this.physics.add.sprite(400,300, 'scooby');
             this.particles = this.add.particles("blueFlares");
+            this.opponentParticles = this.add.particles("greenFlares");
             this.player.setScale(0.05)
             this.flip = -1;
         }
@@ -62,7 +64,7 @@ class Scene2 extends Phaser.Scene {
                 bullet.setActive(true);
                 bullet.setVisible(true);
 
-                let particleEmitter = this.attachParticles(bullet);
+                let particleEmitter = this.attachParticles(bullet, this.opponentParticles);
 
                 if (bullet) {
                     bullet.fire({
@@ -93,8 +95,8 @@ class Scene2 extends Phaser.Scene {
         this.scoreDisplay = this.add.text(10, 20, '');
     }
 
-    attachParticles(bullet) {
-        let particleEmitter = this.particles.createEmitter(this.particleConfig);
+    attachParticles(bullet, particles) {
+        let particleEmitter = particles.createEmitter(this.particleConfig);
         particleEmitter.startFollow(bullet);
 
         bullet.addListener("hitBorder", (data) => {
@@ -131,7 +133,7 @@ class Scene2 extends Phaser.Scene {
             bullet.setActive(true);
             bullet.setVisible(true);
 
-            let particleEmitter = this.attachParticles(bullet);
+            let particleEmitter = this.attachParticles(bullet, this.particles);
 
             if (bullet) {
                 bullet.fire({
