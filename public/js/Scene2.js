@@ -14,6 +14,8 @@ class Scene2 extends Phaser.Scene {
 
     preload() {
         this.load.image('star', '../assets/star.png')
+        this.load.image('scooby', '../assets/scooby.jpg')
+        this.load.image('shaggy', '../assets/shaggy.jpg')
         this.load.image('bomb', '../assets/bomb.png')
         this.load.image("flares", '../assets/yellow.png')
     }
@@ -30,12 +32,19 @@ class Scene2 extends Phaser.Scene {
     }
 
     create(data) {
-        this.player = this.physics.add.sprite(400,300, 'star');
+        this.side = data.selectedSide;
+        if (this.side === "leftSide") {
+            this.player = this.physics.add.sprite(400,300, 'shaggy');
+            this.player.setScale(0.1)
+        } else {
+            this.player = this.physics.add.sprite(400,300, 'scooby');
+            this.player.setScale(0.25)
+        }
         this.player.setMaxVelocity(1000).setFriction(800, 800);
         this.cursors = this.input.keyboard.createCursorKeys();
         this.bullets = this.physics.add.group({ classType: Bullet, runChildUpdate: true });
         this.lastFired = 0;
-        this.side = data.selectedSide;
+
         this.socket = data.socket;
         this.physics.add.overlap(this.player, this.bullets, this.onCollision, null, this)
         
