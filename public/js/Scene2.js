@@ -3,21 +3,18 @@ class Scene2 extends Phaser.Scene {
         super("playGame");
     }
 
-    init() {
-        console.log("hello from scene 2");
-    }
-
     preload() {
         this.load.image('star', '../assets/star.png')
         this.load.image('bomb', '../assets/bomb.png')
     }
 
-    create() {
+    create(data) {
         this.player = this.impact.add.sprite(400,300, 'star');
         this.player.setMaxVelocity(1000).setFriction(800, 600).setPassiveCollision();
         this.cursors = this.input.keyboard.createCursorKeys();
         this.bullets = this.add.group({ classType: Bullet, runChildUpdate: true });
         this.lastFired = 0;
+        this.flip = -1;
     }
       
     update(time,delta) {
@@ -42,14 +39,14 @@ class Scene2 extends Phaser.Scene {
         }
 
         if (this.cursors.space.isDown && time > this.lastFired) {
-            console.log("Hello from fire");
-            console.log(this.bullets);
+            //console.log("Hello from fire");
+            //console.log(this.bullets);
             let bullet = this.bullets.get();
             bullet.setActive(true);
             bullet.setVisible(true);
 
             if (bullet) {
-                bullet.fire(this.player);
+                bullet.fire(this.player, this.flip);
                 this.lastFired = 500 + time;
             }
         }
