@@ -17,7 +17,7 @@ class Bullet extends Phaser.GameObjects.Image {
     update(time, delta) {
         this.x += this.speed * delta;
         this.born += delta;
-        if (this.born > 1000) {
+        if (this.born > 5000) {
             this.setActive(false);
             this.setVisible(false);
             //console.log("Bye from bullet");
