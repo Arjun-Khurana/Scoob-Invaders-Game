@@ -8,6 +8,13 @@ class Scene2 extends Phaser.Scene {
         this.load.image('bomb', '../assets/bomb.png')
     }
 
+    onCollision() {
+        console.log("hit player");
+        this.socket.emit(this.side, {
+            type: "hitPlayer"
+        })
+    }
+
     create(data) {
         this.player = this.impact.add.sprite(400,300, 'star');
         this.player.setMaxVelocity(1000).setFriction(800, 600).setPassiveCollision();
@@ -16,6 +23,7 @@ class Scene2 extends Phaser.Scene {
         this.lastFired = 0;
         this.side = data.selectedSide;
         this.socket = data.socket;
+        this.game.physics.impact.collide(this.player, this.bullets, this.onCollision);
 
         if (this.side == "leftSide") {
             this.flip = 1;
