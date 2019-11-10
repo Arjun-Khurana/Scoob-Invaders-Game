@@ -47,7 +47,8 @@ class Scene2 extends Phaser.Scene {
 
         this.socket = data.socket;
         this.physics.add.overlap(this.player, this.bullets, this.onCollision, null, this)
-        
+        this.player.body.setCollideWorldBounds(true);
+
         this.particles = this.add.particles("flares");
 
         if (this.side == "leftSide") {
@@ -68,7 +69,7 @@ class Scene2 extends Phaser.Scene {
 
                 if (bullet) {
                     bullet.fire({
-                        x: this.side == "leftSide" ? 800 : 0,
+                        x: this.side == "leftSide" ? window.innerWidth : 0,
                         y: packet.y,
                         vel: {
                             x: 0
