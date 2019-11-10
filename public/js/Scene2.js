@@ -16,6 +16,8 @@ class Scene2 extends Phaser.Scene {
         this.player = this.impact.add.sprite(400,300, 'star');
         this.player.setMaxVelocity(1000).setFriction(800, 600).setPassiveCollision();
         this.cursors = this.input.keyboard.createCursorKeys();
+        this.bullets = this.add.group({ classType: Bullet, runChildUpdate: true });
+        this.lastFired = 0;
     }
       
     update(time,delta) {
@@ -37,6 +39,19 @@ class Scene2 extends Phaser.Scene {
         }
         else {
             this.player.setAccelerationY(0);
+        }
+
+        if (this.cursors.space.isDown && time > this.lastFired) {
+            console.log("Hello from fire");
+            console.log(this.bullets);
+            let bullet = this.bullets.get();
+            bullet.setActive(true);
+            bullet.setVisible(true);
+
+            if (bullet) {
+                bullet.fire(this.player);
+                this.lastFired = 500 + time;
+            }
         }
     }
 
