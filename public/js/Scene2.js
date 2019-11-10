@@ -15,16 +15,17 @@ class Scene2 extends Phaser.Scene {
         this.bullets = this.add.group({ classType: Bullet, runChildUpdate: true });
         this.lastFired = 0;
         this.side = data.selectedSide;
-        if (side == "leftSide") {
+        this.socket = data.socket;
+
+        if (this.side == "leftSide") {
             this.flip = 1;
         }
-        else if (side == "rightSide") {
+        else if (this.side == "rightSide") {
             this.flip = -1;
         }
         else {
             console.error("Selected Side not read from Scene1");
         }
-        
     }
       
     update(time,delta) {
