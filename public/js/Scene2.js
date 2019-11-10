@@ -13,6 +13,10 @@ class Scene2 extends Phaser.Scene {
     }
 
     preload() {
+        this.load.audio('theme', [
+            'assets/themeSong.oog',
+            'assets/themeSong.mp3'
+        ]);
         this.load.image('scooby', '../assets/scoobs.png')
         this.load.image('shaggy', '../assets/shags.png')
         this.load.image('bomb', '../assets/snack.png')
@@ -33,8 +37,11 @@ class Scene2 extends Phaser.Scene {
     }
 
     create(data) {
-        this.add.image(0, 0, "bg").setOrigin(0, 0).setScale(1);
+        var music = this.sound.add('theme', {loop:true}); 
+        //music.loop = true; 
+        music.play(); 
 
+        this.add.image(0, 0, "bg").setOrigin(0, 0).setScale(1);
         this.side = data.selectedSide;
         if (this.side === "leftSide") {
             this.player = this.physics.add.sprite(400,300, 'shaggy');
