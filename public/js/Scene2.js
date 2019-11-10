@@ -40,10 +40,12 @@ class Scene2 extends Phaser.Scene {
             this.player = this.physics.add.sprite(400,300, 'shaggy');
             this.particles = this.add.particles("greenFlares");
             this.player.setScale(0.05)
+            this.flip = 1;
         } else {
             this.player = this.physics.add.sprite(400,300, 'scooby');
             this.particles = this.add.particles("blueFlares");
             this.player.setScale(0.05)
+            this.flip = -1;
         }
         this.player.setMaxVelocity(1000).setFriction(800, 800);
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -54,14 +56,6 @@ class Scene2 extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.bullets, this.onCollision, null, this)
         this.player.body.setCollideWorldBounds(true);
 
-        if (this.side == "leftSide") {
-            this.flip = 1;
-        } else if (this.side == "rightSide") {
-            this.flip = -1;
-        } else {
-            console.error("Selected Side not read from Scene1");
-        }
-        
         this.socket.on(this.side, (packet) => {
             if (packet.type == "projectile") {
                 let bullet = this.bullets.get();
