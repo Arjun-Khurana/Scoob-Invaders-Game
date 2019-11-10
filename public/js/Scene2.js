@@ -35,10 +35,10 @@ class Scene2 extends Phaser.Scene {
         this.side = data.selectedSide;
         if (this.side === "leftSide") {
             this.player = this.physics.add.sprite(400,300, 'shaggy');
-            this.player.setScale(0.1)
+            this.player.setScale(0.05)
         } else {
             this.player = this.physics.add.sprite(400,300, 'scooby');
-            this.player.setScale(0.25)
+            this.player.setScale(0.05)
         }
         this.player.setMaxVelocity(1000).setFriction(800, 800);
         this.cursors = this.input.keyboard.createCursorKeys();
