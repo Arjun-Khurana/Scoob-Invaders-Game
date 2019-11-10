@@ -15,36 +15,31 @@ class Scene2 extends Phaser.Scene {
         this.bullets = this.add.group({ classType: Bullet, runChildUpdate: true });
         this.lastFired = 0;
         this.side = data.selectedSide;
+        this.socket = data.socket;
+
         if (this.side == "leftSide") {
             this.flip = 1;
-        }
-        else if (this.side == "rightSide") {
+        } else if (this.side == "rightSide") {
             this.flip = -1;
-        }
-        else {
+        } else {
             console.error("Selected Side not read from Scene1");
         }
-        
     }
       
     update(time,delta) {
         if (this.cursors.left.isDown) {
             this.player.setAccelerationX(-800);
-        }
-        else if (this.cursors.right.isDown) {
+        } else if (this.cursors.right.isDown) {
             this.player.setAccelerationX(800);
-        }
-        else {
+        } else {
             this.player.setAccelerationX(0);
         }
 
         if (this.cursors.down.isDown) {
             this.player.setAccelerationY(800);
-        }
-        else if (this.cursors.up.isDown) {
+        } else if (this.cursors.up.isDown) {
             this.player.setAccelerationY(-800);
-        }
-        else {
+        } else {
             this.player.setAccelerationY(0);
         }
 
@@ -56,7 +51,10 @@ class Scene2 extends Phaser.Scene {
             bullet.setVisible(true);
 
             if (bullet) {
-                bullet.fire(this.player, this.flip);
+                bullet.fire(this.player, {
+                    v: this.flip,
+                    socket: this.socket
+                });
                 this.lastFired = 500 + time;
             }
         }

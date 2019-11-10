@@ -5,10 +5,12 @@ class Bullet extends Phaser.GameObjects.Image {
         this.born = 0;
     }
 
-    fire(player, v) {
+    fire(player, data) {
         //console.log("Hi from bullet");
+        this.socket = data.socket;
+        this.selectedSide = data.v == 1 ? "leftSide" : "rightSide";
         this.setPosition(player.x, player.y);
-        this.speed = Phaser.Math.GetSpeed(v * 1000 + player.vel.x, 1)
+        this.speed = Phaser.Math.GetSpeed(data.v * 1000 + player.vel.x, 1)
         this.born = 0;
     }
 
@@ -19,6 +21,17 @@ class Bullet extends Phaser.GameObjects.Image {
             this.setActive(false);
             this.setVisible(false);
             //console.log("Bye from bullet");
+        }
+
+        if (this.x < 0 || this.x > window.innerWidth) {
+            //console.log("Left the play field!");
+            this.socket.emit(this.selectedSide, {
+                y: this.y,
+                velocity: this.speed,
+                type: "projectile"
+            })
+            this.setActive(false);
+            this.setVisible(false);
         }
     }
 }
