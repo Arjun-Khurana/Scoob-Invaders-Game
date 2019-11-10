@@ -18,7 +18,7 @@ class Bullet extends Phaser.GameObjects.Image {
         if (this.born > 1000) {
             this.setActive(false);
             this.setVisible(false);
-            console.log("Bye from bullet");
+            //console.log("Bye from bullet");
         }
     }
 }
