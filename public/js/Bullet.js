@@ -25,7 +25,7 @@ class Bullet extends Phaser.GameObjects.Image {
 
         if (this.x < 0 || this.x > window.innerWidth) {
             //console.log("Left the play field!");
-            this.socket.emit(this.selectedSide, {
+            this.emit("hitBorder", {
                 y: this.y,
                 velocity: this.speed,
                 type: "projectile"

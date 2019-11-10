@@ -24,6 +24,28 @@ class Scene2 extends Phaser.Scene {
         } else {
             console.error("Selected Side not read from Scene1");
         }
+
+        this.bullets.getChildren().forEach((bullet) => {
+            bullet.on("hitBorder", (data) => {
+                this.socket.emit(this.side, data);
+            })
+        })
+        
+        this.socket.on(this.side, (packet) => {
+            if (packet.type == "projectile") {
+                let bullet = this.bullets.get();
+                bullet.setActive(true);
+                bullet.setVisible(true);
+
+                if (bullet) {
+                    bullet.fire(this.player, {
+                        v: -this.flip,
+                        socket: this.socket
+                    });
+                    this.lastFired = 500 + time;
+                }
+            }
+        })
     }
       
     update(time,delta) {
