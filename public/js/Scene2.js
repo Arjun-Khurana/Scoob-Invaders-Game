@@ -4,11 +4,18 @@ class Scene2 extends Phaser.Scene {
         this.socket = null;
         this.myScore = 0;
         this.theirScore = 0;
+        this.particleConfig = {
+            angle: { min: 170, max: 190 },
+            scale: { start: 0.4, end: 0.1 },
+            blendMode: 'ADD',
+            lifespan: 250,
+        }
     }
 
     preload() {
         this.load.image('star', '../assets/star.png')
         this.load.image('bomb', '../assets/bomb.png')
+        this.load.image("flares", '../assets/yellow.png')
     }
 
     onCollision(x, star) {
@@ -18,6 +25,7 @@ class Scene2 extends Phaser.Scene {
                 type: "hitPlayer"
             })
         }
+        star.deactivateParticles();
         star.disableBody(true, true);
     }
 
@@ -31,6 +39,8 @@ class Scene2 extends Phaser.Scene {
         this.socket = data.socket;
         this.physics.add.overlap(this.player, this.bullets, this.onCollision, null, this)
         
+        this.particles = this.add.particles("flares");
+
         if (this.side == "leftSide") {
             this.flip = 1;
         } else if (this.side == "rightSide") {
@@ -45,6 +55,8 @@ class Scene2 extends Phaser.Scene {
                 bullet.setActive(true);
                 bullet.setVisible(true);
 
+                let particleEmitter = this.attachParticles(bullet);
+
                 if (bullet) {
                     bullet.fire({
                         x: this.side == "leftSide" ? 800 : 0,
@@ -55,7 +67,8 @@ class Scene2 extends Phaser.Scene {
                     }, {
                         v: -this.flip,
                         selectedSide: this.selectedSide,
-                        socket: this.socket
+                        socket: this.socket,
+                        emitter: particleEmitter
                     });
                 }
 
@@ -71,6 +84,17 @@ class Scene2 extends Phaser.Scene {
         });
 
         this.scoreDisplay = this.add.text(10, 20, '');
+    }
+
+    attachParticles(bullet) {
+        let particleEmitter = this.particles.createEmitter(this.particleConfig);
+        particleEmitter.startFollow(bullet);
+
+        bullet.addListener("hitBorder", (data) => {
+            this.socket.emit(this.side, data);
+        });
+
+        return particleEmitter;
     }
       
     update(time,delta) {
@@ -99,9 +123,7 @@ class Scene2 extends Phaser.Scene {
             bullet.setActive(true);
             bullet.setVisible(true);
 
-            bullet.addListener("hitBorder", (data) => {
-                this.socket.emit(this.side, data);
-            });
+            let particleEmitter = this.attachParticles(bullet);
 
             if (bullet) {
                 bullet.fire({
@@ -110,7 +132,8 @@ class Scene2 extends Phaser.Scene {
                 }, {
                     v: this.flip,
                     selectedSide: this.side,
-                    socket: this.socket
+                    socket: this.socket,
+                    emitter: particleEmitter
                 });
                 this.lastFired = 500 + this.time;
             }
