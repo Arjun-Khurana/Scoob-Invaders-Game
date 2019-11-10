@@ -2,7 +2,18 @@ let config = {
     width: window.innerWidth,
     height: window.innerHeight, 
     backgroundColor: 0x000000,
-
+    physics: {
+        default: 'impact',
+        impact: {
+            setBounds: {
+                x: 0,
+                y: 0,
+                width: 800,
+                height: 600,
+                thickness: 32
+            }
+        }
+    },
     scene: [Scene1, Scene2]
 }
 
