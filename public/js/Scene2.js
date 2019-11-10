@@ -52,17 +52,17 @@ class Scene2 extends Phaser.Scene {
     update(time,delta) {
         this.time = time;
         if (this.cursors.left.isDown) {
-            this.player.setAccelerationX(-800);
+            this.player.setVelocityX(-80);
         } else if (this.cursors.right.isDown) {
-            this.player.setAccelerationX(800);
+            this.player.setVelocityX(80);
         } else {
             this.player.setVelocityX(0);
         }
 
         if (this.cursors.down.isDown) {
-            this.player.setAccelerationY(800);
+            this.player.setVelocityY(80);
         } else if (this.cursors.up.isDown) {
-            this.player.setAccelerationY(-800);
+            this.player.setVelocityY(-80);
         } else {
             this.player.setVelocityY(0);
         }
